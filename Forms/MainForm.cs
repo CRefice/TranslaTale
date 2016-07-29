@@ -16,6 +16,7 @@ namespace TranslaTale
     {
         private string FileSavePath;
         private bool DirtyFlag = false;
+        private int EditedLines = 0;
 
         public MainForm()
         {
@@ -31,7 +32,7 @@ namespace TranslaTale
             MainSpriteFontBox.FontPath = Application.StartupPath + "\\Resources\\Fonts.png";
         }
 
-        public void LoadItems(SearchMode selectionMode)
+        public void LoadItems(SearchMode selectionMode = SearchMode.Both)
         {
             MainListView.Items.Clear();
 
@@ -40,32 +41,33 @@ namespace TranslaTale
             MainMenuItemStrip.Enabled = false;
 
             int LineNum = Lines.Count;
-            int DifferentLineNum = 0;
 
             MainListView.BeginUpdate();
             switch (selectionMode)
             {
                 case SearchMode.Base:
-                    var basesToAdd = from line in Lines.LineArray
-                                     where !line.IsEdited()
-                                     select line;
-                    foreach (var line in basesToAdd)
                     {
-                        MainListView.Items.Add(line.ToListViewItem(true));
-
-                        if (line.IsEdited()) DifferentLineNum++;
+                        var linesToAdd = from line in Lines.LineArray
+                                         where !line.IsEdited()
+                                         select line;
+                        foreach (var line in linesToAdd)
+                        {
+                            MainListView.Items.Add(line.ToListViewItem(true));
+                        }
+                        EditedLines = LineNum - linesToAdd.Count();
                     }
                     break;
 
                 case SearchMode.Translation:
-                    var translatedLinesToAdd = from line in Lines.LineArray
-                                     where line.IsEdited()
-                                     select line;
-                    foreach (var line in translatedLinesToAdd)
                     {
-                        MainListView.Items.Add(line.ToListViewItem(true));
-
-                        if (line.IsEdited()) DifferentLineNum++;
+                        var linesToAdd = from line in Lines.LineArray
+                                                   where line.IsEdited()
+                                                   select line;
+                        foreach (var line in linesToAdd)
+                        {
+                            MainListView.Items.Add(line.ToListViewItem(true));
+                        }
+                        EditedLines = linesToAdd.Count();
                     }
                     break;
 
@@ -74,23 +76,45 @@ namespace TranslaTale
                     {
                         MainListView.Items.Add(line.ToListViewItem(true));
 
-                        if (line.IsEdited()) DifferentLineNum++;
+                        if (line.IsEdited()) EditedLines++;
                     }
                     break;
-            }        
+            }
             MainListView.EndUpdate();
 
             MainListView.Enabled = true;
             MainToolStrip.Enabled = true;
             MainMenuItemStrip.Enabled = true;
 
+            SelectItem(MiscSettings.LastVisitedLine);
+
             TotalStatusLabel.Text = LineNum.ToString();
-            TranslatedStatusLabel.Text = DifferentLineNum.ToString();
-            UntranslatedStatusLabel.Text = (LineNum - DifferentLineNum).ToString();
+            TranslatedStatusLabel.Text = EditedLines.ToString();
+            UntranslatedStatusLabel.Text = (LineNum - EditedLines).ToString();
         }
-        public void LoadItems()
+        private void UpdateEditedCount()
         {
-            LoadItems(SearchMode.Both);
+            var editedLines = from line in Lines.LineArray
+                              where line.IsEdited()
+                              select line;
+
+            TranslatedStatusLabel.Text = editedLines.Count().ToString();
+            UntranslatedStatusLabel.Text = (Lines.Count - editedLines.Count()).ToString();
+        }
+        public void PromptReload()
+        {
+            switch (MessageBox.Show("Would you like to reload the current project?", "TranslaTale",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                case DialogResult.Yes:
+                    Hide();
+                    Open(Project.CurrentProject);
+                    Show();
+                    return;
+
+                default:
+                    return;
+            }
         }
 
         public void Open(string cleanFile, string transFile)
@@ -228,6 +252,8 @@ namespace TranslaTale
                 MainTextBox.Text = SelectedString;
                 MainSpriteFontBox.Text = SelectedString;
                 AddBookmarkMenuItem.Enabled = true;
+
+                MiscSettings.LastVisitedLine = MainListView.SelectedIndices[0];
             }
             else
             {
@@ -249,13 +275,17 @@ namespace TranslaTale
             {
                 var SelectedItem = MainListView.SelectedItems[0];
 
+                var SelectedLine = Lines.Get(Int32.Parse(SelectedItem.SubItems[0].Text));
                 string TransLine = MainTextBox.Text;
 
-                Lines.Get(SelectedItem.Index).TranslatedString = TransLine;
+                SelectedLine.TranslatedString = TransLine;
                 MainSpriteFontBox.Text = TransLine;
-
                 SelectedItem.SubItems[2].Text = TransLine;
-                SelectedItem.BackColor = Lines.Get(SelectedItem.Index).IsEdited() ? Color.LightGreen : Color.LightSalmon;
+
+                SelectedItem.BackColor = SelectedLine.IsEdited() ? Color.LightGreen : Color.LightSalmon;
+
+                UpdateEditedCount();
+
             }
         }
         private void MainTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -436,7 +466,7 @@ namespace TranslaTale
 
         private void MergeFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FileMergeForm().Show();
+            new FileMergeForm(this).Show();
         }
     }
 }

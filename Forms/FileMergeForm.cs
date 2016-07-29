@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using TranslaTale.Text;
+using TranslaTale.Projects;
 
 namespace TranslaTale
 {
@@ -19,13 +20,15 @@ namespace TranslaTale
         private Panel CurrentPanel = Panel.Info;
         private enum ConflictMode { Current, Additional, Manual }
         private ConflictMode CurrentMode;
+        private MainForm ParentMainForm;
 
         public string[] Buffer;
         public string[] AdditionalStrings;
         public List<Line> ConflictsList = new List<Line>();
 
-        public FileMergeForm()
+        public FileMergeForm(MainForm parent)
         {
+            ParentMainForm = parent;
             InitializeComponent();
         }
 
@@ -85,6 +88,7 @@ namespace TranslaTale
                                 SolveConflictsPanel.Visible = true;
                                 SolveConflictsPanel.BringToFront();
 
+                                MaximizeBox = true;
                                 FormBorderStyle = FormBorderStyle.Sizable;
 
                                 AddConflicts();
@@ -104,7 +108,9 @@ namespace TranslaTale
                         if (Dialog.ShowDialog() == DialogResult.OK)
                         {
                             File.WriteAllLines(Dialog.FileName, Buffer);
-                            Close();
+                            Hide();
+                            if (Dialog.FileName == Project.CurrentProject.TransFilePath)
+                                ParentMainForm.PromptReload();
                         }
                     }
                     break;
@@ -126,7 +132,7 @@ namespace TranslaTale
                         if (CurrentLine.TranslatedString == AdditionalStrings[i])
                             Buffer[i] = AdditionalStrings[i];
                         else if (CurrentLine.BaseString == AdditionalStrings[i])
-                            Buffer[i] = CurrentLine.BaseString;
+                            Buffer[i] = CurrentLine.TranslatedString;
                         else
                             ConflictsList.Add(new Line(i, CurrentLine.TranslatedString, AdditionalStrings[i]));
                     }
@@ -144,15 +150,19 @@ namespace TranslaTale
         private void AddConflicts()
         {
             ConflictListView.Items.Clear();
+            ConflictListView.BeginUpdate();
             foreach (var line in ConflictsList)
             {
                 ConflictListView.Items.Add(line.ToListViewItem(false));
             }
+            ConflictListView.EndUpdate();
         }
         private void FinishUp()
         {
+            this.WindowState = FormWindowState.Normal;
             Size = new Size(401, 324);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
 
             SolveConflictsPanel.Visible = false;
             ConflictsModePanel.Visible = false;
@@ -200,6 +210,7 @@ namespace TranslaTale
 
                 Buffer[SelectedConflict.Number] = SelectedConflict.TranslatedString;
                 ConflictListView.Items.Remove(item);
+                ConflictsList.Remove(SelectedConflict);
             }
 
             if (ConflictListView.Items.Count <= 0)
@@ -216,6 +227,7 @@ namespace TranslaTale
 
                 Buffer[SelectedConflict.Number] = SelectedConflict.BaseString;
                 ConflictListView.Items.Remove(item);
+                ConflictsList.Remove(SelectedConflict);
             }
 
             if (ConflictListView.Items.Count <= 0)

@@ -67,23 +67,8 @@ namespace TranslaTale
             };
             project.Write(Project.CurrentProject.Path);
             Project.CurrentProject = project;
-
-            switch (MessageBox.Show("Would you like to reload the current project?", "TranslaTale",
-                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
-            {
-                case DialogResult.Yes:
-                    Hide();
-                    ParentMainForm.Open(project);
-                    Close();
-                    return;
-
-                case DialogResult.No:
-                    Close();
-                    return;
-
-                case DialogResult.Cancel:
-                    return;
-            }
+            Hide();
+            ParentMainForm.PromptReload(); 
         }
 
         private void ExitButton_Click(object sender, EventArgs e)

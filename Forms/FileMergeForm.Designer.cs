@@ -314,15 +314,16 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(385, 285);
-            this.Controls.Add(this.SolveConflictsPanel);
             this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.NextButton);
             this.Controls.Add(this.MainPictureBox);
+            this.Controls.Add(this.FinishedPanel);
+            this.Controls.Add(this.SolveConflictsPanel);
             this.Controls.Add(this.ConflictsModePanel);
             this.Controls.Add(this.InfoPanel);
-            this.Controls.Add(this.FinishedPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "FileMergeForm";
             this.Text = "Merge translation files";
             ((System.ComponentModel.ISupportInitialize)(this.MainPictureBox)).EndInit();

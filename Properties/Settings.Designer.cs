@@ -106,5 +106,17 @@ namespace TranslaTale.Properties {
                 this["RegexSearch"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LastVisitedLine {
+            get {
+                return ((int)(this["LastVisitedLine"]));
+            }
+            set {
+                this["LastVisitedLine"] = value;
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@
             this.LineNumberColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.BaseTextColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TranslatedTextColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MainTextBox = new System.Windows.Forms.TextBox();
             this.TextPreviewPanel = new System.Windows.Forms.Panel();
             this.FontComboBox = new System.Windows.Forms.ComboBox();
             this.FaceRadioButton = new System.Windows.Forms.RadioButton();
@@ -70,7 +71,6 @@
             this.TranslatedStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.UntranslatedStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.TotalStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.MainTextBox = new System.Windows.Forms.TextBox();
             this.MainTableLayout.SuspendLayout();
             this.TextPreviewPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainSpriteFontBox)).BeginInit();
@@ -135,6 +135,18 @@
             // 
             this.TranslatedTextColumn.Text = "Translated Text";
             this.TranslatedTextColumn.Width = 275;
+            // 
+            // MainTextBox
+            // 
+            this.MainTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.MainTextBox.Location = new System.Drawing.Point(3, 362);
+            this.MainTextBox.Name = "MainTextBox";
+            this.MainTextBox.Size = new System.Drawing.Size(652, 23);
+            this.MainTextBox.TabIndex = 5;
+            this.MainTextBox.TextChanged += new System.EventHandler(this.MainTextBox_TextChanged);
+            this.MainTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainTextBox_KeyDown);
             // 
             // TextPreviewPanel
             // 
@@ -503,18 +515,6 @@
             this.TotalStatusLabel.Size = new System.Drawing.Size(50, 19);
             this.TotalStatusLabel.Text = "0";
             this.TotalStatusLabel.Click += new System.EventHandler(this.TotalStatusLabel_Click);
-            // 
-            // MainTextBox
-            // 
-            this.MainTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.MainTextBox.Location = new System.Drawing.Point(3, 362);
-            this.MainTextBox.Name = "MainTextBox";
-            this.MainTextBox.Size = new System.Drawing.Size(652, 23);
-            this.MainTextBox.TabIndex = 5;
-            this.MainTextBox.TextChanged += new System.EventHandler(this.MainTextBox_TextChanged);
-            this.MainTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainTextBox_KeyDown);
             // 
             // MainForm
             // 

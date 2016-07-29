@@ -25,6 +25,7 @@ namespace TranslaTale
 
         private void Search(string searchTerm)
         {
+            ResultList.Clear();
             ResultListView.Items.Clear();
 
             var SearchIn = BaseTextRadioButton.Checked ? SearchMode.Base : TranslationRadioButton.Checked ? SearchMode.Translation : SearchMode.Both;

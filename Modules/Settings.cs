@@ -5,6 +5,22 @@ using TranslaTale.Projects;
 
 namespace TranslaTale.Settings
 {
+    public static class MiscSettings
+    {
+        public static int LastVisitedLine
+        {
+            get
+            {
+                return Properties.Settings.Default.LastVisitedLine;
+            }
+            set
+            {
+                Properties.Settings.Default.LastVisitedLine = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+    }
+
     public static class RecentProjects
     {
         public static int Count
