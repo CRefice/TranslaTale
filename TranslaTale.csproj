@@ -252,7 +252,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\TTIcon.ico" />
+    <Content Include="Resources\TTIcon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Fonts.png">
@@ -270,6 +270,14 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".ttp">
+      <Visible>False</Visible>
+      <Description>TranslaTale Project file</Description>
+      <Progid>TTProj</Progid>
+      <DefaultIcon>Resources\TTIcon.ico</DefaultIcon>
+    </FileAssociation>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
